@@ -15,22 +15,23 @@ class MarvelService {
     };
     
     // метод получения всех персонажей
-    getAllCharacters = () => {
-        return this.getResource(`${this._apiBase}characters?limit=9&offset=210&${this._apiKey}`);
+    getAllCharacters = async () => {
+        const res = await this.getResource(`${this._apiBase}characters?limit=9&offset=210&${this._apiKey}`);
+        return res.data.results.map(this._transformCharacter);
     }
 // метод получения конкретного персонажа по id
     getCharacter = async (id) => {
         const res = await this.getResource(`${this._apiBase}characters/${id}?&${this._apiKey}`);
-        return this._transformCharacter(res);
+        return this._transformCharacter(res.data.results[0]);
     }
 // метод получения данных, который будет возвращать уже трансформированный объект
-    _transformCharacter = (res) => {
+    _transformCharacter = (character) => {
         return {
-            name: res.data.results[0].name,
-            description: res.data.results[0].description,
-            thumbnail: res.data.results[0].thumbnail.path + '.' + res.data.results[0].thumbnail.extension,
-            homepage: res.data.results[0].urls[0].url,
-            wiki: res.data.results[0].urls[1].url
+            name: character.name,
+            description: character.description,
+            thumbnail: character.thumbnail.path + '.' + character.thumbnail.extension,
+            homepage: character.urls[0].url,
+            wiki: character.urls[1].url
         }
     }
 }
