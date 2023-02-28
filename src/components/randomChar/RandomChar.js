@@ -13,28 +13,26 @@ class RandomChar extends Component {
     }
 
     state = {
-        name: null,
-        description: null,
-        thumbnail: null, // миниатюра картинка персонажа
-        homepage: null,
-        wiki: null
-
+        character: {}
     }
 
     marvelService = new MarvelService(); //  создаем новое свойство внутри RandomChar
+
+    //  Метод обновляет state персонажа
+    onCharLoaded = (character) => {
+        this.setState({character});
+    }
 
     //  Метод обращается к серверу, получает данные и записывает в state
     updateChar = () => {
         const id = Math.floor(Math.random() * (1010789 - 1009146) + 1009146);
         this.marvelService
             .getCharacter(id)
-            .then(res => {
-                this.setState(res);
-            })
+            .then(this.onCharLoaded)
     }
  
     render() {
-        const {name, description, thumbnail, homepage, wiki} = this.state;
+        const {character: {name, description, thumbnail, homepage, wiki}} = this.state;
         return (
             <div className="randomchar">
                 <div className="randomchar__block">
