@@ -19,14 +19,18 @@ class MarvelService {
         const res = await this.getResource(`${this._apiBase}characters?limit=9&offset=210&${this._apiKey}`);
         return res.data.results.map(this._transformCharacter);
     }
+
 // метод получения конкретного персонажа по id
     getCharacter = async (id) => {
         const res = await this.getResource(`${this._apiBase}characters/${id}?&${this._apiKey}`);
         return this._transformCharacter(res.data.results[0]);
     }
+
+    
 // метод получения данных, который будет возвращать уже трансформированный объект
     _transformCharacter = (character) => {
         return {
+            id: character.id,
             name: character.name,
             description: character.description ? `${character.description.slice(0, 130)}...` : 'There is currently no character description.',
             thumbnail: character.thumbnail.path + '.' + character.thumbnail.extension,
