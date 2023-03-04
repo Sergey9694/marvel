@@ -14,7 +14,11 @@ class RandomChar extends Component {
     state = {
         character: {},
         loading: true,
+<<<<<<< HEAD
         error: false,
+=======
+        error: false
+>>>>>>> main
     }
 
     marvelService = new MarvelService(); //  создаем новое свойство внутри RandomChar
@@ -27,6 +31,7 @@ class RandomChar extends Component {
     onCharLoaded = (character) => {
         this.setState({
             character, 
+<<<<<<< HEAD
             loading: false,
         });
     }
@@ -37,6 +42,11 @@ class RandomChar extends Component {
             error: false
         })
     }
+=======
+            loading: false
+        });
+    }
+>>>>>>> main
 
     // Метод обработки ошибок
     onError = () => {
@@ -76,7 +86,11 @@ class RandomChar extends Component {
                     <p className="randomchar__title">
                         Or choose another one
                     </p>
+<<<<<<< HEAD
                     <button onClick={this.updateChar} className="button button__main">
+=======
+                    <button className="button button__main">
+>>>>>>> main
                         <div className="inner">try it</div>
                     </button>
                     <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
@@ -90,6 +104,7 @@ class RandomChar extends Component {
 const View = ({character}) => {
     const {name, description, thumbnail, homepage, wiki} = character;
 
+<<<<<<< HEAD
     let imgStyle = {'objectFit' : 'cover'};
     if (thumbnail === "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg") {
         imgStyle = {'objectFit' : 'contain'}
@@ -98,6 +113,11 @@ const View = ({character}) => {
     return (
         <div className="randomchar__block">
             <img src={thumbnail} alt="Random character" className="randomchar__img" style={imgStyle}/>
+=======
+    return (
+        <div className="randomchar__block">
+            <img src={thumbnail} alt="Random character" className="randomchar__img"/>
+>>>>>>> main
                 <div className="randomchar__info">
                     <p className="randomchar__name">{name}</p>
                     <p className="randomchar__descr">{description}</p>
