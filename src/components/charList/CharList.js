@@ -10,23 +10,38 @@ class CharList extends Component {
     state = {
         charList: [],
         loading: true,
-        error: false
+        error: false,
+        newItemLoading: false,
+        offset: 210
     }
 
     marvelService = new MarvelService();
     
     componentDidMount() {
-        this.marvelService.getAllCharacters()
-            .then(this.onCharListLoaded)
-            .catch(this.onError)
+        this.onRequest();
+    }
+    // метод создаст запрос на сервер для дозагрузки персонажей
+    onRequest = (offset) => {
+        this.onCharListLoading();
+        this.marvelService.getAllCharacters(offset)
+        .then(this.onCharListLoaded)
+        .catch(this.onError)
+    }
+    // Метод для кнопки - disabled
+    onCharListLoading = () => {
+        this.setState({
+            newItemLoading: true
+        })
     }
 
     //  Метод обновляет state персонажа
-    onCharListLoaded = (charList) => {
-        this.setState({
-            charList, 
+    onCharListLoaded = (newCharList) => {
+        this.setState(({offset, charList}) => ({
+            charList: [...charList, ...newCharList], 
             loading: false,
-        });
+            newItemLoading: false,
+            offset: offset + 9
+        }));
     }
 
     // Метод обработки ошибок
@@ -66,7 +81,7 @@ class CharList extends Component {
 
 
    render () {
-    const {charList, loading, error} = this.state;
+    const {charList, loading, error, newItemLoading, offset} = this.state;
     
     const items = this.renderItems(charList);
 
@@ -79,7 +94,10 @@ class CharList extends Component {
                 {errorMessage}
                 {spinner}
                 {content}
-                <button className="button button__main button__long">
+                <button 
+                    className="button button__main button__long"
+                    disabled={newItemLoading}
+                    onClick={() => this.onRequest(offset)}>
                     <div className="inner">load more</div>
                 </button>
             </div>
