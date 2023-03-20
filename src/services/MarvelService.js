@@ -10,7 +10,7 @@ const useMarvelService = () => {
     
     // метод получения всех персонажей
     const getAllCharacters = async (offset = _baseOffsetCharacters) => {
-        const res = await request(`${_apiBase}characters?limit=9&offset=${offset}&${this._apiKey}`);
+        const res = await request(`${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`);
         return res.data.results.map(_transformCharacter);
     }
 
