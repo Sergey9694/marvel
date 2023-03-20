@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton';
@@ -11,10 +11,7 @@ import './charInfo.scss';
 const CharInfo = (props) => {
 
     const [character, setCharacter] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-
-    const marvelService = new MarvelService();
+    const {loading, error, getCharacter} = useMarvelService();
 
     useEffect(() => {
         updateChar();
@@ -25,28 +22,15 @@ const CharInfo = (props) => {
         if (!charId) {
             return;
         }
-        onCharLoading();
 
-        marvelService
-            .getCharacter(charId)
-            .then(onCharLoaded)
-            .catch(onError)
+    getCharacter(charId)
+        .then(onCharLoaded)
+
     }
 
     //  Метод обновляет state персонажа
     const onCharLoaded = (character) => {
         setCharacter(character);
-        setLoading(false);
-    }
-    // Метод запускает спиннер при обновлении персонажа по нажатию кнопки
-    const onCharLoading = () => {
-        setLoading(true);
-    }
-
-    // Метод обработки ошибок
-    const onError = () => {
-        setLoading(false);
-        setError(true);
     }
 
     const skeleton = character || loading || error ? null : <Skeleton/>
@@ -105,8 +89,6 @@ const View = ({character}) => {
                         )
                     })
                 }
-
-
             </ul>
         </>
     )
