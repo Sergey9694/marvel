@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 
 
 import './randomChar.scss';
@@ -10,11 +10,9 @@ import mjolnir from '../../resources/img/mjolnir.png';
 
 const RandomChar = () => {
 
-    const [character, setCharacter] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-
-    const marvelService = new MarvelService(); //  создаем новое свойство внутри RandomChar
+    const [character, setCharacter] = useState({});
+    // Достали состояния из кастомного хука useMarvelService
+    const {loading, error, getCharacter} = useMarvelService();
 
     useEffect(() => {
         updateChar();
@@ -27,28 +25,14 @@ const RandomChar = () => {
 
     //  Метод обновляет state персонажа
     const onCharLoaded = (character) => {
-        setLoading(false);
         setCharacter(character);
-    }
-    // Метод запускает спиннер при обновлении персонажа по нажатию кнопки
-    const onCharLoading = () => {
-        setLoading(true);
-    }
-
-    // Метод обработки ошибок
-    const onError = () => {
-        setError(true);
-        setLoading(false);
     }
 
     //  Метод обращается к серверу, получает данные и записывает в state
     const updateChar = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        onCharLoading(); // запускает спинер перед запросом к базе данных
-        marvelService
-            .getCharacter(id)
-            .then(onCharLoaded)
-            .catch(onError);
+        getCharacter(id)
+            .then(onCharLoaded);
     }
  
     const errorMessage = error ? <ErrorMessage/> : null;
