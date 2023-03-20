@@ -11,13 +11,14 @@ import './charInfo.scss';
 const CharInfo = (props) => {
 
     const [character, setCharacter] = useState(null);
-    const {loading, error, getCharacter} = useMarvelService();
+    const {loading, error, getCharacter, clearError} = useMarvelService();
 
     useEffect(() => {
         updateChar();
     }, [props.charId])
 
     const updateChar = () => {
+        clearError(); // пропускает ошибку и идет новая загрузка данных
         const {charId} = props;
         if (!charId) {
             return;

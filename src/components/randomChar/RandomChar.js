@@ -12,7 +12,7 @@ const RandomChar = () => {
 
     const [character, setCharacter] = useState({});
     // Достали состояния из кастомного хука useMarvelService
-    const {loading, error, getCharacter} = useMarvelService();
+    const {loading, error, getCharacter, clearError} = useMarvelService();
 
     useEffect(() => {
         updateChar();
@@ -30,6 +30,7 @@ const RandomChar = () => {
 
     //  Метод обращается к серверу, получает данные и записывает в state
     const updateChar = () => {
+        clearError(); // пропускает ошибку и идет новая загрузка данных
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         getCharacter(id)
             .then(onCharLoaded);
