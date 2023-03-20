@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import MarvelService from '../../services/MarvelService';
@@ -8,79 +8,62 @@ import Skeleton from '../skeleton/Skeleton';
 
 import './charInfo.scss';
 
-class CharInfo extends Component {
-    state = {
-        character: null,
-        loading: false,
-        error: false,
-    }
+const CharInfo = (props) => {
 
-    marvelService = new MarvelService();
+    const [character, setCharacter] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
 
-    componentDidMount() {
-        this.updateChar();
-    }
+    const marvelService = new MarvelService();
 
-    componentDidUpdate(prevProps) {
-        if (this.props.charId !== prevProps.charId) {
-            this.updateChar();
-        }
-    }
+    useEffect(() => {
+        updateChar();
+    }, [props.charId])
 
-    updateChar = () => {
-        const {charId} = this.props;
+    const updateChar = () => {
+        const {charId} = props;
         if (!charId) {
             return;
         }
-        this.onCharLoading();
+        onCharLoading();
 
-        this.marvelService
+        marvelService
             .getCharacter(charId)
-            .then(this.onCharLoaded)
-            .catch(this.onError)
+            .then(onCharLoaded)
+            .catch(onError)
     }
 
-        //  Метод обновляет state персонажа
-        onCharLoaded = (character) => {
-            this.setState({
-                character, 
-                loading: false,
-            });
-        }
-        // Метод запускает спиннер при обновлении персонажа по нажатию кнопки
-        onCharLoading = () => {
-            this.setState({
-                loading: true,
-                error: false
-            })
-        }
-    
-        // Метод обработки ошибок
-        onError = () => {
-            this.setState({
-                loading: false,
-                error: true
-            });
-        }
-
-    render() {
-        const {character, loading, error} = this.state;
-
-        const skeleton = character || loading || error ? null : <Skeleton/>
-        const errorMessage = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null;
-        const content = !(loading || error || !character) ? <View character={character}/> : null;
-
-        return (
-            <div className="char__info">
-                {skeleton}
-                {errorMessage}
-                {spinner}
-                {content}
-            </div>
-        )
+    //  Метод обновляет state персонажа
+    const onCharLoaded = (character) => {
+        setCharacter(character);
+        setLoading(false);
     }
+    // Метод запускает спиннер при обновлении персонажа по нажатию кнопки
+    const onCharLoading = () => {
+        setLoading(true);
+    }
+
+    // Метод обработки ошибок
+    const onError = () => {
+        setLoading(false);
+        setError(true);
+    }
+
+    const skeleton = character || loading || error ? null : <Skeleton/>
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = !(loading || error || !character) ? <View character={character}/> : null;
+
+    return (
+        <div className="char__info">
+            {skeleton}
+            {errorMessage}
+            {spinner}
+            {content}
+        </div>
+    )
 }
+
 
 const View = ({character}) => {
     const {name, description, thumbnail, homepage, wiki, comics} = character;
