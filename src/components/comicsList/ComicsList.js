@@ -43,7 +43,7 @@ const ComicsList = () => {
             return (
                 <li className="comics__item" key={i}>
                     <a href="#">
-                        <img src={item.tumbnail} alt={item.title} className="comics__item-img"/>
+                        <img src={item.thumbnail} alt={item.title} className="comics__item-img"/>
                         <div className="comics__item-name">{item.title}</div>
                         <div className="comics__item-price">{item.price}</div>
                     </a>
