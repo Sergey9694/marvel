@@ -1,35 +1,36 @@
-import { Link, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
-import useMarvelService from '../../services/MarvelService';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
+import useMarvelService from "../../services/MarvelService";
+import Spinner from "../spinner/Spinner";
+import ErrorMessage from "../errorMessage/ErrorMessage";
 
-import './singleComicPage.scss';
+import "./singleComicPage.scss";
 
 const SingleComicPage = () => {
-
-    const {comicId} = useParams();
+    const { comicId } = useParams();
     const [comic, setComic] = useState(null);
-    const {loading, error, getComic, clearError} = useMarvelService();
+    const { loading, error, getComic, clearError } = useMarvelService();
 
     useEffect(() => {
         updateComic();
-    }, [comicId])
+    }, [comicId]);
 
     const updateComic = () => {
         clearError(); // пропускает ошибку и идет новая загрузка данных
-        getComic(comicId)
-            .then(onComicLoaded)
-    }
+        getComic(comicId).then(onComicLoaded);
+    };
 
-    const onComicLoaded = (comic) => {
+    const onComicLoaded = comic => {
         setComic(comic);
-    }
+    };
 
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !comic) ? <View comic={comic}/> : null;
+    const errorMessage = error ? <ErrorMessage /> : null;
+    const spinner = loading ? <Spinner /> : null;
+    const content = !(loading || error || !comic) ? (
+        <View comic={comic} />
+    ) : null;
 
     return (
         <>
@@ -37,15 +38,20 @@ const SingleComicPage = () => {
             {spinner}
             {content}
         </>
-    )
-}
+    );
+};
 
-const View = ({comic}) => {
-    const {title, description, pageCount, thumbnail, language, price} = comic;
-    
+const View = ({ comic }) => {
+    const { title, description, pageCount, thumbnail, language, price } = comic;
+
     return (
-        <div className="single-comic">
-            <img src={thumbnail} alt={title} className="single-comic__img"/>
+        <motion.div
+            className="single-comic"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+        >
+            <img src={thumbnail} alt={title} className="single-comic__img" />
             <div className="single-comic__info">
                 <h2 className="single-comic__name">{title}</h2>
                 <p className="single-comic__descr">{description}</p>
@@ -53,9 +59,11 @@ const View = ({comic}) => {
                 <p className="single-comic__descr">Language: {language}</p>
                 <div className="single-comic__price">{price}</div>
             </div>
-            <Link to="/comics" className="single-comic__back">Back to all</Link>
-        </div>
-    )
-}
+            <Link to="/comics" className="single-comic__back">
+                Back to all
+            </Link>
+        </motion.div>
+    );
+};
 
 export default SingleComicPage;

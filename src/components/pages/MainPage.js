@@ -5,31 +5,36 @@ import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 
-import decoration from '../../resources/img/vision.png';
+import decoration from "../../resources/img/vision.png";
+import { motion } from "framer-motion";
 
 const MainPage = () => {
-
     const [selectedChar, setChar] = useState(null);
 
-    const onCharSelected = (id) => {
+    const onCharSelected = id => {
         setChar(id);
-    }
+    };
 
     return (
-        <>
+        <motion.div
+            className="main"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+        >
             <ErrorBoundary>
-                <RandomChar/>
+                <RandomChar />
             </ErrorBoundary>
-            <div className="char__content"> 
+            <div className="char__content">
                 <ErrorBoundary>
-                    <CharList onCharSelected ={onCharSelected}/>
+                    <CharList onCharSelected={onCharSelected} />
                 </ErrorBoundary>
                 <ErrorBoundary>
-                    <CharInfo charId ={selectedChar}/>
+                    <CharInfo charId={selectedChar} />
                 </ErrorBoundary>
             </div>
-            <img className="bg-decoration" src={decoration} alt="vision"/>
-        </>
+            <img className="bg-decoration" src={decoration} alt="vision" />
+        </motion.div>
     );
 };
 
